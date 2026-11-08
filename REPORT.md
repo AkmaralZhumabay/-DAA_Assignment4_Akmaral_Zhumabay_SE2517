@@ -55,3 +55,58 @@ At least one plot will use a logarithmic axis if needed to make differences easi
 ## 7. Reproducibility
 
 All random inputs will be generated using a fixed seed (`42`). Each measurement will be repeated five times, and the median execution time will be recorded. Each run will be stored as a separate row in `results/results.csv`.
+
+
+# Experimental Results and Analysis
+
+## 8. Plots and Takeaways
+
+### Plot 1: Edit Distance Execution Time
+
+![Edit Distance Execution Time](results/plots/edit_distance_time.png)
+
+**Takeaway:** Recursive Edit Distance grows rapidly as input size increases, especially on challenging inputs. The two dynamic programming implementations scale much more efficiently.
+
+### Plot 2: String Search Execution Time
+
+![String Search Execution Time](results/plots/string_search_time.png)
+
+**Takeaway:** Naive Search becomes significantly slower on challenging inputs, while KMP maintains much better performance. On random inputs, Naive Search can be faster because it often finds mismatches quickly.
+
+### Plot 3: String Search Character Comparisons
+
+![String Search Character Comparisons](results/plots/string_search_comparisons.png)
+
+**Takeaway:** Naive Search performs dramatically more comparisons on challenging inputs, while KMP keeps the comparison count close to linear growth.
+
+## 9. Prediction vs. Results
+
+- **Recursive Edit Distance:** The prediction was confirmed. On challenging inputs of length 10, it performed 12,146,179 recursive calls and had a median execution time of 32.4405 ms.
+- **Table vs. Two-Rows Edit Distance:** Both performed the same number of DP cell calculations. The two-row version uses less auxiliary memory, reducing space complexity from O(n × m) to O(m).
+- **Naive vs. KMP:** The prediction was confirmed on challenging inputs. At text length 20,000, Naive Search took 49.4953 ms and performed 19,001,000 comparisons, while KMP took 0.1948 ms and performed 40,998 comparisons.
+- **Random search inputs:** Naive Search sometimes performed better because random patterns often mismatch quickly. KMP also has the overhead of constructing its LPS table.
+
+## 10. Complexity and Experiment Questions
+
+### Edit Distance
+
+| Algorithm | Time Complexity | Auxiliary Space |
+|---|---|---|
+| Recursive | Exponential | O(n + m) stack |
+| Table | O(n × m) | O(n × m) |
+| Two-Rows | O(n × m) | O(m) |
+
+The two-row implementation reduces memory usage while preserving the same time complexity as the full-table implementation.
+
+### String Search
+
+| Algorithm | Time Complexity | Auxiliary Space |
+|---|---|---|
+| Naive Search | O(n × m) | O(1), excluding results |
+| KMP | O(n + m) | O(m), excluding results |
+
+KMP is especially effective when the pattern contains repeated prefixes and suffixes because it avoids rechecking previously matched characters.
+
+## 11. Timing Methodology
+
+Execution time was measured using Java's `System.nanoTime()`. Each experiment was repeated five times, and the median was used as the representative execution time. Random inputs were generated with a fixed seed of 42 to ensure reproducibility. Individual measurements and median results were stored in `results/results.csv`.
